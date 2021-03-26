@@ -1,4 +1,4 @@
-//dirty fucking code, gonna do better next time
+//dirty code, gonna do better next time
 
 var Line = function(points){
     var len = points.length;
