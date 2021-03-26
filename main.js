@@ -1,3 +1,5 @@
+//dirty fucking code, gonna do better next time
+
 var Line = function(points){
     var len = points.length;
     this.get = function(t){
@@ -72,11 +74,13 @@ var generateFourier = function(points,degree){
 
 
 var canvas = document.getElementById("canvas");
-var width = 500;
-var height = 500;
+var width = window.innerWidth;
+var height = window.innerHeight;
 canvas.width = width;
 canvas.height = height;
 var ctx = canvas.getContext("2d");
+ctx.fillStyle = "#002";
+ctx.fillRect(0,0,width,height);
 
 
 var drawPoints = function(points,color,targetLen){
@@ -141,6 +145,7 @@ var main = function(){
     
     
     var handleMouseMove = function(e){
+        e.preventDefault();
         //register the mouse movement and draw stuff on the screen
         if(!down)return false;
         points.push([e.clientX+window.scrollX-this.offsetLeft,e.clientY+window.scrollY+this.offsetTop]);
@@ -152,20 +157,24 @@ var main = function(){
             points.push(last);
             points.push(current);
         }
+        ctx.fillStyle = "#002";
         ctx.clearRect(0,0,width,height);
+        ctx.fillRect(0,0,width,height);
         drawPointsClose(points,"#4f4");
     };
     
     var handleMouseDown = function(e){
+        e.preventDefault();
         down = true;
         points.push([e.clientX+window.scrollX-this.offsetLeft,e.clientY+window.scrollY+this.offsetTop]);
     };
     
     var handleMouseUp = function(e){
+        e.preventDefault();
         if(!down)return false;
         down = false;
-        canvas.removeEventListener("mousemove",handleMouseMove);
-        canvas.removeEventListener("mousedown",handleMouseDown);
+        document.body.removeEventListener("mousemove",handleMouseMove);
+        document.body.removeEventListener("mousedown",handleMouseDown);
         document.body.removeEventListener("mouseup",handleMouseDown);
         //now things are ready
         var degree = 100;
@@ -176,10 +185,13 @@ var main = function(){
         var period = 10;//10 seconds
         var animate = function(t){
             t /= 1000;//10 seconds to draw the whole thing
+            t -= 3;
             if(start === 0)start = t;//t in seconds, not in milliseconds
             var dt = t - start;
             start = t;
             ctx.clearRect(0,0,width,height);
+            ctx.fillStyle = "#002";
+            ctx.fillRect(0,0,width,height);
             drawPointsClose(points,"#4f48");
             requestAnimationFrame(animate);
             var term = sequence[degree];
@@ -196,8 +208,8 @@ var main = function(){
         requestAnimationFrame(animate);
     };
     
-    canvas.addEventListener("mousemove",handleMouseMove);
-    canvas.addEventListener("mousedown",handleMouseDown);
+    document.body.addEventListener("mousemove",handleMouseMove);
+    document.body.addEventListener("mousedown",handleMouseDown);
     document.body.addEventListener("mouseup",handleMouseUp);
     
 }
